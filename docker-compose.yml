@@ -1,0 +1,69 @@
+version: '2'
+
+volumes:
+  mongodata:
+    external: true
+
+services:
+
+  mongo:
+    image: mongo:3.2
+    command: "mongod --logpath /dev/null --smallfiles --setParameter failIndexKeyTooLong=false"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    network_mode: "bridge"
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile-prod
+    ports:
+      - "3000:3000"
+    network_mode: "bridge"
+    environment:
+      BRIDGE_ADDRESS: $BRIDGE_ADDRESS
+
+  analyzer-microservice:
+    build:
+      context: ./analyzer-microservice
+      dockerfile: Dockerfile-prod
+    ports:
+      - "3001:3001"
+    links:
+      - "mongo"
+    network_mode: "bridge"
+    environment:
+      BRIDGE_ADDRESS: $BRIDGE_ADDRESS
+      GOOGLE_PROJECTID: $GOOGLE_PROJECTID
+
+  auth-microservice:
+    build:
+      context: ./auth-microservice
+      dockerfile: Dockerfile-prod
+    ports:
+      - "3002:3002"
+    links:
+      - "mongo"
+    network_mode: "bridge"
+    environment:
+      BRIDGE_ADDRESS: $BRIDGE_ADDRESS
+
+  room-microservice:
+    build:
+      context: ./room-microservice
+      dockerfile: Dockerfile-prod
+    ports:
+      - "3003:3003"
+    links:
+      - "mongo"
+    network_mode: "bridge"
+    environment:
+      BRIDGE_ADDRESS: $BRIDGE_ADDRESS
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile-prod
+  #   ports:

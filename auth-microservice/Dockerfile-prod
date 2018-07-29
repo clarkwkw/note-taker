@@ -1,0 +1,15 @@
+FROM node:7.7.1
+
+WORKDIR /usr/src/app
+
+EXPOSE 3002
+CMD [ "yarn", "start" ]
+
+RUN yarn global add typescript node-gyp
+
+COPY package.json /usr/src/app/
+RUN yarn install
+
+# Bundle app source
+COPY ./ /usr/src/app
+RUN yarn build

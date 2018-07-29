@@ -47,6 +47,7 @@ app.use(fileUpload());
 app.use(
   expressJwt({ secret: SERVER_SECRET }).unless({
     path: [
+      '/test/',
       '/auth/login',
       '/auth/signup',
       /\/static\/.*/
@@ -77,3 +78,4 @@ https
     key, cert
   }, app)
   .listen(3000);
+  //https.createServer({}, app).listen(3000);

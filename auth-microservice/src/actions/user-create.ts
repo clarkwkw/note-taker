@@ -7,7 +7,7 @@ export default async (msg, reply) => {
 
   const { username, password, email } = msg;
   let hashedPassword = await bcrypt.hash(password, 10);
-
+  
   // check if user already exists
   let result: User;
   try {

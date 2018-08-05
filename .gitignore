@@ -40,3 +40,4 @@ dist
 .DS_Store
 scripts/crawled-data/**/*
 *.pem
+google-key.json

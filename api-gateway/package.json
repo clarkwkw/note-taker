@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@google-cloud/vision": "^0.10.0",
     "@types/bluebird": "^3.0.37",
     "@types/express": "^4.0.35",
     "@types/express-jwt": "^0.0.34",
@@ -17,7 +16,7 @@
     "jsonwebtoken": "^7.3.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "seneca": "^3.3.0",
+    "seneca": "3.3.0",
     "uuid": "^3.0.1"
   },
   "name": "api-gateway",

@@ -4,6 +4,8 @@ import { seneca } from './utils';
 
 
 import test from './actions/test';
+import translate from './actions/translate'
+import speechToText from './actions/speech-to-text'
 
 // connect to the database
 mongoose.connect('mongodb://mongo:27017/location');
@@ -21,4 +23,6 @@ seneca
   .ready(() => {
     seneca // register to seneca the actions that this microservice can handle
       .add('cmd:test', test)
+      .add('cmd:translate', translate)
+      .add('cmd:speech-to-text', speechToText)
   });

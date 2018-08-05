@@ -10,6 +10,7 @@ export const SERVER_SECRET = 'thisistheserversecret';
 // middleware to catch all the unhandled error
 export const errorMiddleware
   = (err, req, res, next) => {
+  console.log(err);
   let error = 'unknownError';
   if (err.seneca === true) { /* is a seneca error */
     error = err.details.message;

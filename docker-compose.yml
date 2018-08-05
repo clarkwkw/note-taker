@@ -3,6 +3,8 @@ version: '2'
 volumes:
   mongodata:
     external: true
+  audio-storage:
+    external: true
 
 services:
 
@@ -24,6 +26,9 @@ services:
     network_mode: "bridge"
     environment:
       BRIDGE_ADDRESS: $BRIDGE_ADDRESS
+      GOOGLE_PROJECTID: $GOOGLE_PROJECTID
+    volumes:
+      - audio-storage:/data/audio
 
   analyzer-microservice:
     build:
@@ -37,6 +42,8 @@ services:
     environment:
       BRIDGE_ADDRESS: $BRIDGE_ADDRESS
       GOOGLE_PROJECTID: $GOOGLE_PROJECTID
+    volumes:
+      - audio-storage:/data/audio
 
   auth-microservice:
     build:

@@ -29,8 +29,8 @@ import room from './routes/room';
 const app = express();
 
 // for parsing payload
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: "150mb"}));
+app.use(bodyParser.urlencoded({limit: "150mb", extended: false }));
 app.use(cookieParser());
 
 // for cross-site connection

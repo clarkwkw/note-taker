@@ -13,7 +13,8 @@ export default async (msg, reply) => {
   try {
      result = await User.retrieve({ username });
      if (result) {
-      throw new Error('alreadyExist');
+      reply(new Error('alreadyExist'), null);
+      return;
      }
   } catch(e) {
     reply(e, null);  // propagate the error to send if any

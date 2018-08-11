@@ -1,13 +1,16 @@
 {
   "dependencies": {
     "@google-cloud/translate": "^1.1.0",
-    "@google-cloud/speech": "^2.0.0",
+    "@google-cloud/speech": "1.5.0",
     "@types/mongoose": "^4.7.6",
     "@types/seneca": "^2.1.5",
     "bcryptjs": "^2.4.3",
+    "express": "^4.14.1",
     "lodash": "^4.17.4",
     "mongoose": "^4.8.4",
-    "seneca": "3.3.0"
+    "seneca": "3.3.0",
+    "socket.io": "^2.0.4"
+
   },
   "name": "analyzer-microservice",
   "version": "1.0.0",

@@ -36,6 +36,7 @@ services:
       dockerfile: Dockerfile-prod
     ports:
       - "3001:3001"
+      - "4001:4001"
     links:
       - "mongo"
     network_mode: "bridge"

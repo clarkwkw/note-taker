@@ -6,6 +6,7 @@ import { seneca } from './utils';
 import test from './actions/test';
 import translate from './actions/translate'
 import speechToText from './actions/speech-to-text'
+import socketServer from './socket'
 
 // connect to the database
 mongoose.connect('mongodb://mongo:27017/location');
@@ -26,3 +27,5 @@ seneca
       .add('cmd:translate', translate)
       .add('cmd:speech-to-text', speechToText)
   });
+
+  socketServer.listen(4001);

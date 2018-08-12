@@ -2,23 +2,25 @@ import { speech } from './utils';
 
 export default class StreamAnalyzer{
     recognizeStream = null;
+    client = null;
+    lang = null;
 
-    constructor(){
-
+    constructor(client, lang){
+        this.client = client;
+        this.lang = lang;
     }
 
-    startRecognitionStream = function(client, lang){
-
-        this.recognizeStream = speech.streamingRecognize(generateConfig(lang))
+    startRecognitionStream = function(){
+        this.recognizeStream = speech.streamingRecognize(generateConfig(this.lang))
             .on('error', (err) => {
-                client.emit('gcStreamError', err);
+                this.client.emit('gcStreamError', err);
                 this.stopRecognitionStream();
             })
             .on('data', (data) => {
-                client.emit('speechData', data);
+                this.client.emit('speechData', data);
                 if (data.results[0] && data.results[0].isFinal) {
                     this.stopRecognitionStream();
-                    this.startRecognitionStream(client,lang);
+                    this.startRecognitionStream(this.client, this.lang);
                 }
             });
     }

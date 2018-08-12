@@ -4,9 +4,12 @@ import { seneca } from './utils';
 
 
 import test from './actions/test';
-
+import roomCreate from './actions/room-create';
+import roomDelete from './actions/room-delete';
+import roomPatch from './actions/room-patch';
+import roomRetrieve from './actions/room-retrieve';
 // connect to the database
-mongoose.connect('mongodb://mongo:27017/location');
+mongoose.connect('mongodb://mongo:27017/room');
 
 // error handler
 mongoose.connection.on('error', () => {
@@ -21,4 +24,8 @@ seneca
   .ready(() => {
     seneca // register to seneca the actions that this microservice can handle
       .add('cmd:test', test)
+      .add('cmd:roomCreate', roomCreate)
+      .add('cmd:roomDelete', roomDelete)
+      .add('cmd:roomPatch', roomPatch)
+      .add('cmd:roomRetrieve', roomRetrieve)
   });

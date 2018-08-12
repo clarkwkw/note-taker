@@ -13,8 +13,8 @@ io.on('connection', function (socket) {
 
     socket.on('startAnalyzer', function (request) {
         if(!_.has(analyzers, request.roomId)){
-            let analyzer = new StreamAnalyzer();
-            analyzer.startRecognitionStream(socket, request.langCode);
+            let analyzer = new StreamAnalyzer(socket, request.langCode);
+            analyzer.startRecognitionStream();
             analyzers[request.roomId] = analyzer;
         }
     });

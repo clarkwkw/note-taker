@@ -9,7 +9,7 @@ import speechToText from './actions/speech-to-text'
 import socketServer from './socket'
 
 // connect to the database
-mongoose.connect('mongodb://mongo:27017/location');
+mongoose.connect('mongodb://mongo:27017/analyzer');
 
 // error handler
 mongoose.connection.on('error', () => {

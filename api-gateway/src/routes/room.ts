@@ -130,4 +130,37 @@ router.get('/id/:roomId', async (req, res) => {
     }
   });
 
+/**
+ * @api {get} /room/addMessage/id/:roomId Add Room Message
+ * @apiName room_addMessage
+ * @apiPermission None
+ * @apiGroup Room
+ *
+ * @apiParam {String} roomId Id of the room
+ * @apiParam {String} sender Id of the sender
+ * @apiParam {String} content Content of the message
+ * @apiParam {String} messageType type of the message
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *    {
+ *      "id": "{{id-placeholder}}"
+ *    }
+ *
+ * @apiError (Error 500) {String} error Possible value: 'roomNotExist', etc.
+ * @apiErrorExample {json} Error-Response:
+ *    {
+ *      "error": "roomNotExist"
+ *    }
+ */
+router.patch('/addMessage/id/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  const { sender, content, messageType} = req.body;
+  try {
+    const room = await act({ role: 'room', cmd: 'roomAddMessage', id: roomId, sender, content, messageType });
+    res.json(room);
+  } catch (err) {
+    res.status(500).json({ error: err.details.message });
+  }
+});
+
 export default router;

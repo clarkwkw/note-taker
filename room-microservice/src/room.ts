@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import * as _ from 'lodash';
+import {Message} from './message';
 
 export enum RoomType {
     ONLINE,
@@ -18,7 +19,7 @@ export class Room {
   meetingTime: string = null;
   userIds: string[] = [];
   roomType: RoomType = null;
-  chatRecord: String[] = [];
+  chatRecord: Message[] = [];
 
   static schema = new mongoose.Schema({
     roomName: String,
@@ -26,7 +27,7 @@ export class Room {
     meetingTime: Date,
     userIds: [String],
     roomType: String,
-    chatRecord: [String]
+    chatRecord: [Message.schema]
   });
 
   static model = mongoose.model('Room', Room.schema);
@@ -45,12 +46,17 @@ export class Room {
   // create the new object and assigned to this
   constructor(object: any) {
     const { _id: id, roomName, ownerId, meetingTime, userIds, roomType, chatRecord } = object;
+    
     this.roomName = roomName;
     this.ownerId = ownerId;
     this.meetingTime = meetingTime;
     this.userIds = userIds;
     this.roomType = stringToRoomType(roomType);
-    this.chatRecord = chatRecord || [];
+    if(_.isArray(chatRecord)){
+      this.chatRecord = chatRecord.map(msg => new Message(msg));
+    }else{
+      this.chatRecord = []
+    }  
     this.id = id;
   }
 

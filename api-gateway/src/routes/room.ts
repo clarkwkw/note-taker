@@ -156,11 +156,49 @@ router.patch('/addMessage/id/:roomId', async (req, res) => {
   const { roomId } = req.params;
   const { sender, content, messageType} = req.body;
   try {
-    const room = await act({ role: 'room', cmd: 'roomAddMessage', id: roomId, sender, content, messageType });
+    const room = await act({ role: 'room', cmd: 'roomAddMessage', id: roomId, sender, content, messageType, recognizing: false });
     res.json(room);
   } catch (err) {
     res.status(500).json({ error: err.details.message });
   }
 });
 
+router.patch('/updateMessage/id/:messageId', async (req, res) => {
+  const { messageId } = req.params;
+  const { content } = req.body;
+  try {
+    const message = await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId: req.user.id });
+    res.json(message);
+  } catch (err) {
+    res.status(500).json({ error: err.details.message });
+  }
+});
+
+/**
+ * @api {get} /room/list List Rooms
+ * @apiName room_list
+ * @apiPermission None
+ * @apiGroup Room
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *    {
+ *      "rooms": [
+ *        {{room-placeholder}}
+ *      ]
+ *    }
+ *
+ * @apiError (Error 500) {String} error Possible value: 'databaseError', etc.
+ * @apiErrorExample {json} Error-Response:
+ *    {
+ *      "error": "databaseError"
+ *    }
+ */
+router.get('/list', async (req, res) => {
+  try {
+    const rooms = await act({ role: 'room', cmd: 'roomList', userId: req.user.id });
+    res.json(rooms);
+  } catch (err) {
+    res.status(500).json({ error: err.details.message });
+  }
+});
 export default router;

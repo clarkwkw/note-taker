@@ -2,13 +2,15 @@ import * as mongoose from 'mongoose';
 
 import { seneca } from './utils';
 
-
 import test from './actions/test';
 import roomCreate from './actions/room-create';
 import roomDelete from './actions/room-delete';
 import roomPatch from './actions/room-patch';
 import roomRetrieve from './actions/room-retrieve';
 import addMessage from './actions/room-addMessage';
+import roomList from './actions/room-list';
+import updateMessage from './actions/room-updateMessage';
+
 // connect to the database
 mongoose.connect('mongodb://mongo:27017/room');
 
@@ -28,6 +30,8 @@ seneca
       .add('cmd:roomAddMessage', addMessage)
       .add('cmd:roomCreate', roomCreate)
       .add('cmd:roomDelete', roomDelete)
+      .add('cmd:roomList', roomList)
       .add('cmd:roomPatch', roomPatch)
       .add('cmd:roomRetrieve', roomRetrieve)
+      .add('cmd:roomUpdateMessage', updateMessage)
   });

@@ -66,7 +66,7 @@ router.put('/speech-to-text/:language', async (req: any, res) => {
   }
 
     try {
-      const result = await act({ role: 'analyzer', cmd: 'speech-to-text', filename: uploadPath, language });
+      const result = await act({ role: 'analyzer', cmd: 'speech-to-text', timeout$: 60000, filename: uploadPath, language });
       res.json(result);
     } catch(err) {
       res.status(500).json({ error: err.details.message });

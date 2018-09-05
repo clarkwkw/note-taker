@@ -67,7 +67,7 @@ app.use(errorMiddleware); // keep this as last middleware, which catches all err
 
 // register this as a client for all microservice
 seneca
-  .client({ host: process.env.BRIDGE_ADDRESS, port: '3001', pin: 'role:analyzer' })
+  .client({ host: process.env.BRIDGE_ADDRESS, port: '3001', pin: 'role:analyzer', timeout: 600000 })
   .client({ host: process.env.BRIDGE_ADDRESS, port: '3002', pin: 'role:auth' })
   .client({ host: process.env.BRIDGE_ADDRESS, port: '3003', pin: 'role:room' });
 

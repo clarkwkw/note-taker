@@ -1,4 +1,4 @@
-import { Room } from '../room';
+import { Room, stringToRoomType } from '../room';
 import * as _ from 'lodash'
 
 export default async (msg, reply) => {
@@ -7,6 +7,11 @@ export default async (msg, reply) => {
 
   if(!roomName || !ownerId || !meetingTime || !userIds || !roomType){
       reply(new Error("MissingValueError"), null);
+      return;
+  }
+
+  if(_.isNil(stringToRoomType(roomType))){
+    reply(new Error("InvalidRoomTypeError"), null);
       return;
   }
 

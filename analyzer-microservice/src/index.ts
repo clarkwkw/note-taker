@@ -18,7 +18,7 @@ mongoose.connection.on('error', () => {
 
 // listen to all the microservice call, also ready to be called
 seneca
-  .listen({ port: '3001', pin: 'role:analyzer' })
+  .listen({ port: '3001', pin: 'role:analyzer', timeout: 600000 })
   .client({ host: process.env.BRIDGE_ADDRESS, port: '3002', pin: 'role:auth' })
   .client({ host: process.env.BRIDGE_ADDRESS, port: '3003', pin: 'role:room' })
   .ready(() => {

@@ -85,7 +85,7 @@ export class Room {
         meetingTime: this.meetingTime,
         userIds: this.userIds,
         roomType: RoomType[this.roomType],
-        chatRecord: this.chatRecord
+        chatRecord: this.chatRecord.map(record => record.getMongooseModel())
       });
   }
 

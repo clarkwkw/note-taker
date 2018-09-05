@@ -16,6 +16,7 @@ export class Message{
     roomId: string = null;
     timestamp: Date = null;
     content: string = null;
+    recognizing: boolean = false;
     messageType: MessageType = null;
 
     static schema = new mongoose.Schema({
@@ -23,16 +24,34 @@ export class Message{
         roomId: String,
         timestamp: Date,
         content: String,
-        messageType: String
+        messageType: String,
+        recognizing: Boolean
       });
+    
+    static model = mongoose.model('Message', Message.schema);
 
     constructor(object: any) {
-        const { _id: id, sender, roomId, timestamp, content, messageType} = object;
+        const { _id: id, sender, roomId, timestamp, content, messageType, recognizing} = object;
         this.sender = sender;
         this.roomId = roomId;
         this.timestamp = timestamp || new Date();
         this.content = content;
         this.messageType = stringToMessageType(messageType);
         this.id = id;
+        if(recognizing)this.recognizing = true;
       }
+    
+      getMongooseModel(){
+        return new Message.model({
+          _id: this.id,
+          sender: this.sender,
+          roomId: this.roomId,
+          timestamp: this.timestamp,
+          content: this.content,
+          messageType: MessageType[this.messageType],
+          recognizing: this.recognizing
+        });
+      }
+
+    
 }

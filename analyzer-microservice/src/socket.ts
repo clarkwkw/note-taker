@@ -9,14 +9,22 @@ const socketServer = new http.Server(socketApp);
 const io = socketio(socketServer);
 let analyzers = {string: StreamAnalyzer};
 
+function generateSocketReplyCallback(client){
+    function callback(event, data){
+        client.emit(event, data);
+    }
+    return callback;
+}
+
 io.on('connection', function (socket) {
 
     socket.on('startAnalyzer', function (request) {
-        if(!_.has(analyzers, request.roomId)){
-            let analyzer = new StreamAnalyzer(socket, request.langCode);
-            analyzer.startRecognitionStream();
-            analyzers[request.roomId] = analyzer;
+        if(_.has(analyzers, request.roomId)){
+            analyzers[request.roomId].stopRecognitionStream()
         }
+        let analyzer = new StreamAnalyzer(generateSocketReplyCallback(socket), request.langCode);
+        analyzer.startRecognitionStream();
+        analyzers[request.roomId] = analyzer;
     });
 
     socket.on('binaryAudioData', function (request) {

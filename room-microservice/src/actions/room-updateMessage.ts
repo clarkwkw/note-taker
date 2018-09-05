@@ -2,7 +2,7 @@ import { Room } from '../room';
 
 export default async (msg, reply) => {
 
-  const { messageId, userId, content } = msg;
+  const { messageId, userId, content, speechToTextResult } = msg;
 
   if(!messageId || !userId || !content){
       reply(new Error("MissingValueError"), null);
@@ -33,6 +33,9 @@ export default async (msg, reply) => {
 
     room.chatRecord = room.chatRecord.map(message => {
         if(message.id == messageId){
+            if(message.recognizing && !speechToTextResult){
+                throw new Error("MessageLockedError");
+            }
             message.content = content;
             message.recognizing = false;
         }

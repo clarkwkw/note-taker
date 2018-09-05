@@ -71,9 +71,16 @@ export class Room {
   async patch() {
     const model = this.getMongooseModel();
     try {
-      await Room.model.findByIdAndUpdate(this.id, model); // ask database to update
+      let p = new Promise(async (resolve, reject) => {
+        await Room.model.findByIdAndUpdate(this.id, model, {new: true}, (err, doc) => {
+          this.chatRecord = doc["chatRecord"].map(subDoc => new Message(subDoc));
+          if(err)reject(err);
+          resolve();
+        }); // ask database to update
+      });
+      await p;
     } catch (e) {
-      throw new Error('databaseError');
+        throw new Error('databaseError');
     }
   }
 

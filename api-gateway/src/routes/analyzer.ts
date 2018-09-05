@@ -1,9 +1,7 @@
 import * as express from 'express';
-import * as path from 'path';
 import * as _ from 'lodash';
-import { v1 as uuid } from 'uuid';
 
-import { act } from '../utils';
+import { act, handleAudioUpload } from '../utils';
 
 const router = express.Router();
 
@@ -37,34 +35,8 @@ router.get('/translate', async (req, res) => {
   });
 
 router.put('/speech-to-text/:language', async (req: any, res) => {
-    const { language } = req.params;
-
-    if (!req.files) {
-      return res.status(500).json({ error: 'noFileUploaded' });
-    }
-
-    const { audio } = req.files;
-    if (_.isUndefined(audio)) {
-      res.status(500).json({ error: 'noFileUploaded' });
-    }
-
-  const filename = `${uuid()}${path.extname(audio.name)}`;
-  const uploadPath = `/data/audio/${filename}`;
-
-  const move = uploadPath => new Promise((resolve, reject) => {
-    audio.mv(uploadPath, err => {
-      if (err) { reject(err); }
-      resolve();
-    });
-  });
-
-
-  try {
-    await move(uploadPath);
-  } catch (e) {
-    return res.status(500).json({ error: 'uploadFailed' });
-  }
-
+    const { language } = req.params;    
+    let uploadPath = await handleAudioUpload(req, res);
     try {
       const result = await act({ role: 'analyzer', cmd: 'speech-to-text', timeout$: 60000, filename: uploadPath, language });
       res.json(result);

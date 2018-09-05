@@ -17,3 +17,7 @@ export async function retrieveUser(userId: string){
         throw new Error("UserNotExist");
     }
 }
+
+export async function speechToTextAsync(filename, language, messageId, sender){
+    await act({ role: 'analyzer', cmd: 'speech-to-text-async', filename, language, messageId, userId: sender });
+}

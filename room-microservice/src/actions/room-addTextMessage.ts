@@ -1,18 +1,13 @@
 import { Room } from '../room';
-import { Message, stringToMessageType } from '../message';
+import { Message } from '../message';
 import * as _ from 'lodash'
 
 export default async (msg, reply) => {
 
-  const { id, sender, content, messageType, recognizing } = msg;
+  const { id, sender, content } = msg;
 
-  if(!id || !sender || !content || !messageType){
+  if(!id || !sender || !content){
       reply(new Error("MissingValueError"), null);
-      return;
-  }
-
-  if(_.isNil(stringToMessageType(messageType))){
-    reply(new Error("InvalidMessageTypeError"), null);
       return;
   }
 
@@ -33,10 +28,10 @@ export default async (msg, reply) => {
       return;
   }
   
-  room.chatRecord.push(new Message({sender, content, messageType, recognizing}));
+  room.chatRecord.push(new Message({sender, content, messageType: "TEXT", recognizing: false}));
 
   try {
-    room.patch();
+    await room.patch();
     reply(null, { id: room.chatRecord[room.chatRecord.length - 1].id });
   } catch (e) {
     reply(new Error('databaseError'), null);

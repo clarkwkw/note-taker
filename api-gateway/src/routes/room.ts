@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as passport from 'passport';
 
-import { act } from '../utils';
+import { act, handleAudioUpload } from '../utils';
 
 const router = express.Router();
 
@@ -131,8 +131,8 @@ router.get('/id/:roomId', async (req, res) => {
   });
 
 /**
- * @api {get} /room/addMessage/id/:roomId Add Room Message
- * @apiName room_addMessage
+ * @api {get} /room/addTextMessage/id/:roomId Add Room Message
+ * @apiName room_addTextMessage
  * @apiPermission None
  * @apiGroup Room
  *
@@ -152,12 +152,25 @@ router.get('/id/:roomId', async (req, res) => {
  *      "error": "roomNotExist"
  *    }
  */
-router.patch('/addMessage/id/:roomId', async (req, res) => {
+router.put('/addTextMessage/id/:roomId', async (req, res) => {
   const { roomId } = req.params;
-  const { sender, content, messageType} = req.body;
+  const { content } = req.body;
   try {
-    const room = await act({ role: 'room', cmd: 'roomAddMessage', id: roomId, sender, content, messageType, recognizing: false });
-    res.json(room);
+    const messageId = await act({ role: 'room', cmd: 'roomAddTextMessage', id: roomId, sender: req.user.id, content });
+    res.json(messageId);
+  } catch (err) {
+    res.status(500).json({ error: err.details.message });
+  }
+});
+
+router.put('/addSpeechMessage/id/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  const { language } = req.body;
+
+  let uploadPath = await handleAudioUpload(req, res);
+  try {
+    const messageId = await act({ role: 'room', cmd: 'roomAddSpeechMessage', id: roomId, sender: req.user.id, language, filename: uploadPath});
+    res.json(messageId);
   } catch (err) {
     res.status(500).json({ error: err.details.message });
   }
@@ -167,7 +180,7 @@ router.patch('/updateMessage/id/:messageId', async (req, res) => {
   const { messageId } = req.params;
   const { content } = req.body;
   try {
-    const message = await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId: req.user.id });
+    const message = await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId: req.user.id, speechToTextResult: false });
     res.json(message);
   } catch (err) {
     res.status(500).json({ error: err.details.message });

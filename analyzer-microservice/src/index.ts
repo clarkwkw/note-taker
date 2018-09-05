@@ -6,6 +6,7 @@ import { seneca } from './utils';
 import test from './actions/test';
 import translate from './actions/translate'
 import speechToText from './actions/speech-to-text'
+import speechToTextAsync from './actions/speech-to-text-async'
 import socketServer from './socket'
 
 // connect to the database
@@ -26,6 +27,7 @@ seneca
       .add('cmd:test', test)
       .add('cmd:translate', translate)
       .add('cmd:speech-to-text', speechToText)
+      .add('cmd:speech-to-text-async', speechToTextAsync)
   });
 
   socketServer.listen(4001);

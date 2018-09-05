@@ -14,6 +14,8 @@ export const speech = new Speech.SpeechClient();
 
 export const translate = Translate();
 
+export const supportedLanguages: String[] = ["yue-Hant-HK","cmn-Hans-HK", "en-US"];
+
 //Reference: https://medium.com/cod3/convert-speech-from-an-audio-file-to-text-using-google-speech-api-b951f4032a64
 export async function convertAudio(pathIn, pathOut){
 	if(!pathIn || !pathOut){
@@ -59,7 +61,7 @@ export function removeFile(path: string){
 }
 
 export async function updateMessage(messageId, userId, content){
-	await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId});
+	await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId, speechToTextResult: true});
 }
 
 

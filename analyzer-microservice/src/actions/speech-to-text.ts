@@ -1,7 +1,5 @@
 import * as _ from 'lodash';
-import { createSTTTask, removeFile } from '../utils';
-
-const supportedLanguages: String[] = ["yue-Hant-HK","cmn-Hans-HK", "en-US"];
+import { createSTTTask, removeFile, supportedLanguages } from '../utils';
 
 export default async (msg, reply) => {
     const { filename, language } = msg;

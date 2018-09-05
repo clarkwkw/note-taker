@@ -7,7 +7,8 @@ import roomCreate from './actions/room-create';
 import roomDelete from './actions/room-delete';
 import roomPatch from './actions/room-patch';
 import roomRetrieve from './actions/room-retrieve';
-import addMessage from './actions/room-addMessage';
+import addSpeechMessage from './actions/room-addSpeechMessage';
+import addTextMessage from './actions/room-addTextMessage';
 import roomList from './actions/room-list';
 import updateMessage from './actions/room-updateMessage';
 
@@ -27,7 +28,8 @@ seneca
   .ready(() => {
     seneca // register to seneca the actions that this microservice can handle
       .add('cmd:test', test)
-      .add('cmd:roomAddMessage', addMessage)
+      .add('cmd:roomAddSpeechMessage', addSpeechMessage)
+      .add('cmd:roomAddTextMessage', addTextMessage)
       .add('cmd:roomCreate', roomCreate)
       .add('cmd:roomDelete', roomDelete)
       .add('cmd:roomList', roomList)

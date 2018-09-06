@@ -26,6 +26,8 @@ import auth from './routes/auth';
 import analyzer from './routes/analyzer';
 import room from './routes/room';
 
+import message from './routes/message';
+
 const app = express();
 
 // for parsing payload
@@ -62,6 +64,8 @@ app.use('/auth', auth);
 
 app.use('/analyzer', analyzer);
 app.use('/room', room);
+
+app.use('/message', message);
 
 app.use(errorMiddleware); // keep this as last middleware, which catches all error
 

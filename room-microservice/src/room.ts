@@ -2,13 +2,11 @@ import * as mongoose from 'mongoose';
 import * as _ from 'lodash';
 import {Message} from './message';
 
-export enum RoomType {
-    ONLINE,
-    OFFLINE
-}
+const ROOMTYPES = ["ONLINE", "OFFLINE"];
+export { ROOMTYPES } ;
 
-export function stringToRoomType(str: keyof RoomType): RoomType{
-  return RoomType[<string>str];
+export function isValidRoomType(roomType: string){
+  return !_.isNil(roomType) && _.includes(ROOMTYPES, roomType);
 }
 
 export class Room {
@@ -18,7 +16,7 @@ export class Room {
   ownerId: string = null;
   meetingTime: string = null;
   userIds: string[] = [];
-  roomType: RoomType = null;
+  roomType: string = null;
   chatRecord: Message[] = [];
 
   static schema = new mongoose.Schema({
@@ -51,7 +49,7 @@ export class Room {
     this.ownerId = ownerId;
     this.meetingTime = meetingTime;
     this.userIds = userIds;
-    this.roomType = stringToRoomType(roomType);
+    this.roomType = roomType;
     if(_.isArray(chatRecord)){
       this.chatRecord = chatRecord.map(msg => new Message(msg));
     }else{
@@ -91,7 +89,7 @@ export class Room {
         ownerId: this.ownerId,
         meetingTime: this.meetingTime,
         userIds: this.userIds,
-        roomType: RoomType[this.roomType],
+        roomType: this.roomType,
         chatRecord: this.chatRecord.map(record => record.getMongooseModel())
       });
   }
@@ -102,6 +100,9 @@ export class Room {
       result = await Room.model.findById(roomId);
     } catch(e) {
       throw new Error(e);
+    }
+    if(_.isNil(result)){
+      throw new Error("RoomNotFoundError");
     }
     return new Room(result);
   }

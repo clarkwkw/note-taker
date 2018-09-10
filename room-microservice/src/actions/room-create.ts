@@ -1,5 +1,5 @@
-import { Room, stringToRoomType } from '../room';
-import * as _ from 'lodash'
+import { Room, isValidRoomType } from '../room';
+import * as _ from 'lodash';
 
 export default async (msg, reply) => {
 
@@ -10,7 +10,7 @@ export default async (msg, reply) => {
       return;
   }
 
-  if(_.isNil(stringToRoomType(roomType))){
+  if(!isValidRoomType(roomType)){
     reply(new Error("InvalidRoomTypeError"), null);
       return;
   }

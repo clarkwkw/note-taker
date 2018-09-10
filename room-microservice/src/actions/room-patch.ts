@@ -1,4 +1,4 @@
-import { Room, stringToRoomType } from '../room';
+import { Room, isValidRoomType } from '../room';
 import * as _ from 'lodash';
 import { retrieveUser } from '../utils';
 
@@ -57,14 +57,12 @@ try{
   return;
 }
 
-  if(!_.isUndefined(roomType)){
-    console.log(stringToRoomType(roomType))
-    if(_.isUndefined(stringToRoomType(roomType))){
-      reply(new Error("InvalidRoomType"), null);
-      return;
-    }
-    room.roomType = stringToRoomType(roomType);
+  if(isValidRoomType(roomType)){
+    room.roomType = roomType;
     modified = true;
+  }else{
+    reply(new Error("InvalidRoomType"), null);
+    return;
   }
 
   if (!modified) {

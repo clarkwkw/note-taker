@@ -15,6 +15,7 @@ export default async (msg, reply) => {
   let room: Room;
   try{
     room = await Room.retrieveById(id);
+    console.log("retrieved");
     if(room.userIds.findIndex(userId => userId == sender) == -1){
         reply(new Error("UserNotFoundError"), null);
         return;

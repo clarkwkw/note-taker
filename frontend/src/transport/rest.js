@@ -4,9 +4,10 @@ import { HOST } from '../constants/backend';
 import * as _ from 'lodash';
 
 async function helper(path, method, options, func){
+  console.log(options);
   let res = await fetch(HOST + path, _.merge({ method }, options));
-  if (res.status === 403) {
-    history.push('/');
+  if (res.status === 403 || res.status === 401) {
+    history.push('/login');
     delete localStorage.token;
   }
   let result = await res.json();
@@ -59,6 +60,10 @@ export const get = async (path, payload = {}) => await helper(
     },
     body: JSON.stringify({ username, password })
   }, (result) => {
-      console.log("logined:", result);
-    localStorage.token = result.token;
+    if(!_.isNil(result.token)){
+      localStorage.token = result.token;
+    }else{
+      delete localStorage.token;
+      throw new Error("LoginFailedError");
+    }
   });

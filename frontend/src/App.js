@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
@@ -12,21 +13,24 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import LoginIcon from 'mdi-material-ui/Login';
 import SidebarItem from './components/SidebarItem';
 import dashboardStyle from './material/dashboardStyle';
 import sidebarItems from './constants/sidebarItems';
 import { history, Routes } from './routes';
 import { Router } from 'react-router-dom';
-import { login } from './transport/rest';
+import { authStateStore } from './utils/auth';
 
 class App extends React.Component {
   state = {
     open: false,
+    loggedIn: authStateStore.isLoggedIn(),
   }
 
   constructor(props){
     super(props);
-    this.login();
+    authStateStore.addLoggedInListener(() => this.setLoggedIn(true));
+    authStateStore.addLoggedOutListener(() => this.setLoggedIn(false));
   }
 
   handleDrawerOpen = () => {
@@ -37,12 +41,12 @@ class App extends React.Component {
     this.setState({ open: false });
   };
 
-  login = async () => {
-    await login({username: "clark", password: "clark"});
+  setLoggedIn = (loggedIn) => {
+    this.setState({ loggedIn });
   }
-
   render() {
     const { classes } = this.props;
+    let sidebarItemKey = 0;
     return (
       <div className="App">
       <Router history={history}>
@@ -68,11 +72,13 @@ class App extends React.Component {
               <Typography variant="title" color="inherit" noWrap className={classes.title}>
                 Note Taker
               </Typography>
-              {/*<IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>*/}
+                {
+                  this.state.loggedIn?
+                  (<Button className={classes.logoutButton} onClick={authStateStore.logout} variant="outlined">
+                    Logout
+                  </Button>):
+                  null
+                }
             </Toolbar>
           </AppBar>
           <Drawer
@@ -91,9 +97,12 @@ class App extends React.Component {
             <List>
               <div>
               {
-              sidebarItems.map(item => (
-                  <SidebarItem icon={item.icon} text={item.text} url={item.url}/>
-              ))}
+                this.state.loggedIn?
+                sidebarItems.map(item => (
+                  <SidebarItem key={sidebarItemKey++} icon={item.icon} text={item.text} url={item.url}/>
+                )):
+                (<SidebarItem icon={<LoginIcon />} text="Login" url="/login"/>)
+              }
               </div>
             </List>
             <Divider />

@@ -1,7 +1,9 @@
+import { grey, indigo } from '@material-ui/core/colors';
+
 const drawerWidth = 240;
 
 
-const styles = theme => ({
+const dashboardStyle = theme => ({
   root: {
     display: 'flex',
   },
@@ -73,6 +75,13 @@ const styles = theme => ({
   tableContainer: {
     height: 320,
   },
+  logoutButton: {
+    color: grey[50],
+    '&:hover': {
+      backgroundColor: indigo[600],
+    },
+  }
 });
 
-export default styles;
+
+export default dashboardStyle;

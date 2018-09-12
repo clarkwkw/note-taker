@@ -70,9 +70,9 @@ services:
     environment:
       BRIDGE_ADDRESS: $BRIDGE_ADDRESS
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile-prod
-    ports:
-      - "5000:5000"
+#  frontend:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile-prod
+#    ports:
+#      - "5000:5000"

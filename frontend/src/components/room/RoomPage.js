@@ -26,6 +26,7 @@ const styles = theme => ({
     },
     card: {
         minWidth: 275,
+        marginBottom: 30
     },
     pos: {
         marginBottom: 12,
@@ -37,8 +38,9 @@ const styles = theme => ({
 
 function renderAvatarGrid(ids){
     const ROWSIZE = 5;
+    let i = 0;
     return  _.chunk(ids, ROWSIZE).map(chunk => (
-        <ListItem>
+        <ListItem key={i++}>
             <ListItemText primary=""/>
             {chunk}
         </ListItem>
@@ -71,7 +73,7 @@ class RoomPage extends React.Component{
         }
         return(
             <div>
-            <Card className={classes.card}  style={{marginBottom: 30}}>
+            <Card className={classes.card}>
                 <CardHeader
                      avatar={
                         <Avatar className={classes.avatar}>
@@ -101,7 +103,7 @@ class RoomPage extends React.Component{
                         </ListItem>
                         {
                             renderAvatarGrid(room.userIds.map(id => (
-                                <Avatar>
+                                <Avatar key={id}>
                                     <ImageIcon />
                                 </Avatar>
                             )))
@@ -116,7 +118,7 @@ class RoomPage extends React.Component{
 	        </Typography>
             {
                 room.chatRecord.map(chat => (
-                        <Card className={classes.card} style={{marginTop:30}}>
+                        <Card key={chat.id} className={classes.card} style={{marginTop:30}}>
                             <CardHeader
                                 avatar={
                                     <Avatar className={classes.avatar}>

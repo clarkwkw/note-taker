@@ -2,11 +2,13 @@ import * as queryString from 'query-string';
 import { history } from '../routes';
 import { HOST } from '../constants/backend';
 import * as _ from 'lodash';
+import warningRouter from '../utils/warningRouter';
 
 async function helper(path, method, options, func){
   console.log(options);
   let res = await fetch(HOST + path, _.merge({ method }, options));
   if (res.status === 403 || res.status === 401) {
+    warningRouter.pushWarning("Please login");
     history.push('/login');
     delete localStorage.token;
   }
@@ -54,16 +56,31 @@ export const get = async (path, payload = {}) => await helper(
   });
   
   // function for sending LOGIN POST request
-  export const login = async ({ username, password }) => await helper('/auth/login', 'POST', {
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ username, password })
-  }, (result) => {
-    if(!_.isNil(result.token)){
-      localStorage.token = result.token;
-    }else{
-      delete localStorage.token;
-      throw new Error("LoginFailedError");
-    }
-  });
+  export const login = async ({ username, password }) => await helper('/auth/login', 'POST', 
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    }, (result) => {
+      if(!_.isNil(result.token)){
+        localStorage.token = result.token;
+      }else{
+        delete localStorage.token;
+        throw new Error("LoginFailedError");
+      }
+    });
+
+  export const register = async( username, password, email ) => await helper('/auth/signup', 'POST', 
+    {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password, email })
+    }, 
+      (result) => {
+        if(_.isNil(result.id)){
+          throw new Error(result.error || "UnknownError");
+        }
+      }
+    );

@@ -15,6 +15,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import LoginIcon from 'mdi-material-ui/Login';
 import SidebarItem from './components/SidebarItem';
+import WarningSnackBar from './components/WarningSnackBar';
 import dashboardStyle from './material/dashboardStyle';
 import sidebarItems from './constants/sidebarItems';
 import { history, Routes } from './routes';
@@ -53,6 +54,7 @@ class App extends React.Component {
       <React.Fragment>
         <CssBaseline />
         <div className={classes.root}>
+          <WarningSnackBar />
           <AppBar
             position="absolute"
             className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
@@ -77,7 +79,9 @@ class App extends React.Component {
                   (<Button className={classes.logoutButton} onClick={authStateStore.logout} variant="outlined">
                     Logout
                   </Button>):
-                  null
+                  (<Button className={classes.logoutButton} onClick={() => history.push("/register")} variant="outlined">
+                    Register
+                </Button>)
                 }
             </Toolbar>
           </AppBar>

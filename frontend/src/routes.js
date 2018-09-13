@@ -5,6 +5,7 @@ import RoomTable from './components/room/RoomTable';
 import { createBrowserHistory } from 'history';
 import RoomPage from './components/room/RoomPage';
 import LoginPage from './components/auth/LoginPage'
+import RegisterPage from './components/auth/RegisterPage';
 
 const history = createBrowserHistory();
 
@@ -14,6 +15,12 @@ const Routes = (superProps) => {
     <Route exact path="/login" render={(props) => ( 
     	  <SimplePage heading='Welcome Back!'>
           <LoginPage />
+        </SimplePage>
+    )} />
+
+    <Route exact path="/register" render={(props) => ( 
+    	  <SimplePage heading='Register'>
+          <RegisterPage />
         </SimplePage>
     )} />
 

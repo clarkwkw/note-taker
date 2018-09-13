@@ -13,6 +13,7 @@ import Lock from '@material-ui/icons/Lock';
 import { history } from '../../routes';
 import { authStateStore } from '../../utils/auth';
 import warningRouter from '../../utils/warningRouter';
+import { Redirect } from 'react-router';
 
 const styles = theme => ({
     card: {
@@ -63,10 +64,9 @@ class LoginPage extends React.Component{
         const { classes } = this.props;
 
         if(authStateStore.isLoggedIn()){
-            history.push("/");
-            return (null);
+            return (<Redirect to="/" />);
         }
-        
+
         return (
             <div align="center"> 
                 <form onSubmit={this.login}>

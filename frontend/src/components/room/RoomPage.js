@@ -17,6 +17,8 @@ import OnlineIcon from '@material-ui/icons/ComputerRounded';
 import ImageIcon from '@material-ui/icons/Image';
 import RecordIcon from '@material-ui/icons/RecordVoiceOver';
 import TextIcon from '@material-ui/icons/Note';
+import { Redirect } from 'react-router';
+import warningRouter from '../../utils/warningRouter';
 
 import * as _ from 'lodash';
 
@@ -70,6 +72,11 @@ class RoomPage extends React.Component{
             return (
                 <CircularProgress className={classes.progress} />
             );
+        }
+
+        if(_.isNil(room.id)){
+            warningRouter.pushWarning("Room Not Found");
+            return (<Redirect to="/" />);
         }
         return(
             <div>

@@ -16,6 +16,7 @@ import warningRouter from '../../utils/warningRouter';
 import { validatePassword, validateEmail, validateUsername } from '../../utils/validation';
 import { register, login } from '../../transport/rest';
 import { authStateStore } from '../../utils/auth';
+import { Redirect } from 'react-router';
 
 const styles = theme => ({
     card: {
@@ -99,8 +100,7 @@ class RegisterPage extends React.Component{
         let emailRed = this.state.email.length > 0 && !emailValidated.isValid;
 
         if(authStateStore.isLoggedIn()){
-            history.push("/");
-            return (null);
+            return (<Redirect to="/" />);
         }
 
         return (

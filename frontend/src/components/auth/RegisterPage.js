@@ -14,7 +14,7 @@ import EmailIcon from 'mdi-material-ui/Email';
 import { history } from '../../routes';
 import warningRouter from '../../utils/warningRouter';
 import { validatePassword, validateEmail, validateUsername } from '../../utils/validation';
-import { register, login } from '../../transport/rest';
+import { register } from '../../transport/rest';
 import { authStateStore } from '../../utils/auth';
 import { Redirect } from 'react-router';
 

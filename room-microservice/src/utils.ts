@@ -6,10 +6,6 @@ export const seneca = senecaClass();
 export const act : any = Bluebird.promisify(seneca.act, {context: seneca});
 
 export async function retrieveUser(userId: string){
-    if(!_.isString(userId)){
-        throw new Error("UserNotExist");
-    }
-    
     try{
         let user = await act({ role: 'auth', cmd: 'userRetrieve', userId});
         return user;

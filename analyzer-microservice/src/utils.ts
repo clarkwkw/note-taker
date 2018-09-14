@@ -24,6 +24,9 @@ export async function convertAudio(pathIn, pathOut){
 	if (!fs.existsSync(pathIn)) {
 		throw new Error('File not found');
 	}
+	if(pathIn == pathOut){
+		return new Promise((resolve, reject) => { resolve(); });
+	}
 
 	var outStream = fs.createWriteStream(pathOut);
 
@@ -61,7 +64,7 @@ export function removeFile(path: string){
 }
 
 export async function updateMessage(messageId, userId, content){
-	await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId, speechToTextResult: true});
+	await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId });
 }
 
 

@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history';
 import RoomPage from './components/room/RoomPage';
 import LoginPage from './components/auth/LoginPage'
 import RegisterPage from './components/auth/RegisterPage';
+import NewRoom from './components/room/NewRoom';
 
 const history = createBrowserHistory();
 
@@ -29,6 +30,13 @@ const Routes = (superProps) => {
         <RoomTable />
       </SimplePage>
     )} />
+
+    <Route exact path="/newRoom" render={(props) => ( 
+    	<SimplePage heading='New Room'>
+        <NewRoom />
+      </SimplePage>
+    )} />
+
     <Route path="/room/:id" render={(props) => (
       <SimplePage heading='Room Details'>
         <RoomPage id={props.match.params.id} />

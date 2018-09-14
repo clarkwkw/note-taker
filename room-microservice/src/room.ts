@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
 import * as _ from 'lodash';
-import {Message} from './message';
 
 const ROOMTYPES = ["ONLINE", "OFFLINE"];
 export { ROOMTYPES } ;
@@ -17,15 +16,15 @@ export class Room {
   meetingTime: string = null;
   userIds: string[] = [];
   roomType: string = null;
-  chatRecord: Message[] = [];
+  chatRecord: string[] = [];
 
   static schema = new mongoose.Schema({
     roomName: String,
-    ownerId: String,
+    ownerId: mongoose.SchemaTypes.ObjectId,
     meetingTime: Date,
-    userIds: [String],
+    userIds: [mongoose.SchemaTypes.ObjectId],
     roomType: String,
-    chatRecord: [Message.schema]
+    chatRecord: [mongoose.SchemaTypes.ObjectId]
   });
 
   static model = mongoose.model('Room', Room.schema);
@@ -50,11 +49,7 @@ export class Room {
     this.meetingTime = meetingTime;
     this.userIds = userIds;
     this.roomType = roomType;
-    if(_.isArray(chatRecord)){
-      this.chatRecord = chatRecord.map(msg => new Message(msg));
-    }else{
-      this.chatRecord = []
-    }  
+    this.chatRecord = chatRecord;
     this.id = id;
   }
 
@@ -69,14 +64,7 @@ export class Room {
   async patch() {
     const model = this.getMongooseModel();
     try {
-      let p = new Promise(async (resolve, reject) => {
-        await Room.model.findByIdAndUpdate(this.id, model, {new: true}, (err, doc) => {
-          this.chatRecord = doc["chatRecord"].map(subDoc => new Message(subDoc));
-          if(err)reject(err);
-          resolve();
-        }); // ask database to update
-      });
-      await p;
+      await Room.model.findByIdAndUpdate(this.id, model);
     } catch (e) {
         throw new Error('databaseError');
     }
@@ -90,7 +78,7 @@ export class Room {
         meetingTime: this.meetingTime,
         userIds: this.userIds,
         roomType: this.roomType,
-        chatRecord: this.chatRecord.map(record => record.getMongooseModel())
+        chatRecord: this.chatRecord
       });
   }
 

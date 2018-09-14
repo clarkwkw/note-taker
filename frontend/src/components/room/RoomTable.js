@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import FloatingButton from '../FloatingButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import AddIcon from '@material-ui/icons/Add';
 import { getRooms } from '../../transport/room';
 import { toShortFormattedDateTimeStr } from '../../utils/date';
 import { RoundedRectangle } from '../../material/RoundedRectangle';
@@ -40,6 +42,10 @@ class RoomTable extends React.Component{
     const { classes } = this.props;
 
     return (
+      <div>
+      <FloatingButton onClick={(e)=>{history.push("/newRoom")}}>
+        <AddIcon />
+      </FloatingButton>
       <Paper className={classes.root}>
         <Table className={classes.table}>
           <TableHead>
@@ -66,6 +72,7 @@ class RoomTable extends React.Component{
           </TableBody>
         </Table>
       </Paper>
+      </div>
     );
   }
 }

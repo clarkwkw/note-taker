@@ -12,10 +12,9 @@ export default async (msg, reply) => {
       return;
   }
 
-  let room: Room;
+  let room: Room, message: Message;
   try{
     room = await Room.retrieveById(id);
-    console.log("retrieved");
     if(room.userIds.findIndex(userId => userId == sender) == -1){
         reply(new Error("UserNotFoundError"), null);
         return;
@@ -25,11 +24,13 @@ export default async (msg, reply) => {
       return;
   }
   
-  room.chatRecord.push(new Message({sender, content: "", messageType: "SPEECH", recognizing: true}));
+  message = new Message({ sender, content: "", messageType: "SPEECH", recognizing: true, roomId: room.id });
+  
   try {
+    let messageId = await message.save();
+    room.chatRecord.push(""+messageId);
     await room.patch();
-    let messageId = room.chatRecord[room.chatRecord.length - 1].id;
-    let analysisRequest = await speechToTextAsync(filename, language, messageId, sender);
+    await speechToTextAsync(filename, language, messageId, sender);
     reply(null, { id: messageId });
   } catch (e) {
     reply(new Error('databaseError'), null);

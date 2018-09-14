@@ -1,48 +1,27 @@
-import { Room } from '../room';
+import { Message } from '../message';
 
 export default async (msg, reply) => {
 
-  const { messageId, userId, content, speechToTextResult } = msg;
+  const { messageId, content, userId } = msg;
 
-  if(!messageId || !userId || !content){
+  if(!messageId || !content){
       reply(new Error("MissingValueError"), null);
       return;
   }
 
-  let rooms: [Room];
+  let message: Message;
   try{
-    rooms = await Room.retrieveMany({
-            chatRecord:{
-                $elemMatch:{
-                    _id: messageId
-                }
-            }
-        }, 
-        1
-    );
-    if(rooms.length != 1){
-        reply(new Error("MessageNotFoundError"), null);
-        return;
-    }
+    message = await Message.retrieveById(messageId);
 
-    let room: Room = rooms[0];
-    if(room.userIds.findIndex(userId => userId == userId) == -1){
+    if(message.sender != userId){
         reply(new Error("UnauthorizedError"), null);
         return;
     }
 
-    room.chatRecord = room.chatRecord.map(message => {
-        if(message.id == messageId){
-            if(message.recognizing && !speechToTextResult){
-                throw new Error("MessageLockedError");
-            }
-            message.content = content;
-            message.recognizing = false;
-        }
-        return message;
-    });
+    message.recognizing = false;
+    message.content = content;
+    message.patch();
 
-    room.patch();
     reply(null, { id: messageId });
   }catch(e){
       reply(e, null);

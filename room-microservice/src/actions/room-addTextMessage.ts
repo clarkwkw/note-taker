@@ -16,7 +16,7 @@ export default async (msg, reply) => {
     return;
   }
 
-  let room: Room;
+  let room: Room, message: Message;
   try{
     room = await Room.retrieveById(id);
     if(room.userIds.findIndex(userId => userId == sender) == -1){
@@ -28,13 +28,13 @@ export default async (msg, reply) => {
       return;
   }
   
-  room.chatRecord.push(new Message({sender, content, messageType: "TEXT", recognizing: false}));
-
+  message = new Message({ sender, content, messageType: "TEXT", recognizing: false, roomId: room.id });
   try {
+    let messageId = await message.save();
+    room.chatRecord.push(""+messageId);
     await room.patch();
-    reply(null, { id: room.chatRecord[room.chatRecord.length - 1].id });
+    reply(null, { id: messageId });
   } catch (e) {
     reply(new Error('databaseError'), null);
   }
-
 };

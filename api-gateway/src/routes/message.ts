@@ -54,7 +54,7 @@ router.put('/text/id/:roomId', async (req, res) => {
     const { messageId } = req.params;
     const { content } = req.body;
     try {
-      const message = await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId: req.user.id, speechToTextResult: false });
+      const message = await act({ role: 'room', cmd: 'roomUpdateMessage', messageId, content, userId: req.user.id });
       res.json(message);
     } catch (err) {
       res.status(500).json({ error: err.details.message });

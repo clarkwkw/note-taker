@@ -2,6 +2,7 @@ import React from 'react';
 import { getRoom } from '../../transport/room';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles'; 
+import AvatarList from './AvatarList';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -37,17 +38,6 @@ const styles = theme => ({
         fontSize: 20
     }
   });
-
-function renderAvatarGrid(ids){
-    const ROWSIZE = 5;
-    let i = 0;
-    return  _.chunk(ids, ROWSIZE).map(chunk => (
-        <ListItem key={i++}>
-            <ListItemText primary=""/>
-            {chunk}
-        </ListItem>
-    ))
-}
   
 class RoomPage extends React.Component{
     state = {
@@ -107,17 +97,9 @@ class RoomPage extends React.Component{
                         </ListItem>
                         <ListItem>
                             <ListItemText primary="Participant(s)"/>
-                        </ListItem>
-                        {
-                            renderAvatarGrid(room.userIds.map(id => (
-                                <Avatar key={id}>
-                                    <ImageIcon />
-                                </Avatar>
-                            )))
-                        }
-                        
+                        </ListItem>                        
                     </List>
-
+                    <AvatarList users={room.userIds.map(id => ({id}))} rowSize={5} /> 
                 </CardContent>
             </Card>
             <Typography variant="headline" gutterBottom>
@@ -132,7 +114,7 @@ class RoomPage extends React.Component{
                                         <ImageIcon />
                                     </Avatar>
                                 }
-                                title={chat.sender}
+                                title={room.userDict[chat.sender].username}
                                 subheader={toFullFormattedDateTimeStr(chat.timestamp)}
                                 classes={{
                                     title: classes.title

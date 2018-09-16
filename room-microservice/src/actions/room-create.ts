@@ -25,6 +25,10 @@ export default async (msg, reply) => {
       return;
   }
   
+  if(!userIds.includes(ownerId)){
+    userIds.push(ownerId);
+  }
+  
   const room = new Room({ roomName, ownerId, meetingTime, userIds, roomType });
   
   try {

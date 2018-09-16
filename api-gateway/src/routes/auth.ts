@@ -113,6 +113,16 @@ router.get('/id/:userId', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  const { username, resultLimit } = req.query;
+  try {
+    const users = await act({ role: 'auth', cmd: 'userRetrieve', query: {username, resultLimit}});
+    res.json({users});
+  } catch (err) {
+    res.status(500).json({ error: err.details.message });
+  }
+});
+
 /**
  * @api {patch} /auth/id/:userId Patch User
  * @apiName user_patch

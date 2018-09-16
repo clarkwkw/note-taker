@@ -92,26 +92,27 @@ class RoomPage extends React.Component{
                         <ListItem divider>
                             <ListItemText primary="Room Owner"/>
                             <Avatar>
-                                <ImageIcon />
+                                {room.userDict[room.ownerId].username}
                             </Avatar>
                         </ListItem>
                         <ListItem>
                             <ListItemText primary="Participant(s)"/>
                         </ListItem>                        
                     </List>
-                    <AvatarList users={room.userIds.map(id => ({id}))} rowSize={5} /> 
+                    <AvatarList users={room.userIds.map(id => (room.userDict[id]))} rowSize={5} /> 
                 </CardContent>
             </Card>
             <Typography variant="headline" gutterBottom>
 	            Conversation
 	        </Typography>
             {
+                room.chatRecord.length > 0?
                 room.chatRecord.map(chat => (
                         <Card key={chat.id} className={classes.card} style={{marginTop:30}}>
                             <CardHeader
                                 avatar={
                                     <Avatar className={classes.avatar}>
-                                        <ImageIcon />
+                                        {room.userDict[chat.sender].username}
                                     </Avatar>
                                 }
                                 title={room.userDict[chat.sender].username}
@@ -129,7 +130,14 @@ class RoomPage extends React.Component{
                                 {"   "+chat.content}
                             </CardContent>
                         </Card>
-                ))
+                )):
+                (
+                    <Card className={classes.card} style={{marginTop:30}}>
+                        <CardContent>
+                            There is no conversation yet.
+                        </CardContent>
+                    </Card>
+                )
             }
             </div>
         )

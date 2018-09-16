@@ -1,5 +1,18 @@
-import {validate} from 'validate.js';
+import { validate } from 'validate.js';
 import * as _ from 'lodash';
+import moment from 'moment';
+
+validate.extend(validate.validators.datetime, {
+    parse: function(value, options) {
+      return +moment.utc(value);
+    },
+    // Input is a unix timestamp
+    format: function(value, options) {
+      var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DDThh:mm";
+      return moment.utc(value).format(format);
+    }
+  });
+  
 
 function constructFormattedResult(result){
     return {
@@ -48,4 +61,16 @@ function validateUsername(username){
     )
 }
 
-export { validateEmail, validatePassword, validateUsername };
+function validateMeetingTime(meetingTime){
+    return constructFormattedResult(validate.single(
+        meetingTime, {
+            presence: true,
+            datetime: {
+                earliest: moment.utc().subtract(10, 'minutes'),
+                message: "Cannot be in the past"
+            }
+        })
+    );
+}
+
+export { validateEmail, validatePassword, validateUsername, validateMeetingTime };

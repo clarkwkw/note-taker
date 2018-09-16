@@ -26,9 +26,9 @@ const router = express.Router();
  *    }
  */
 router.post('/create', async (req, res) => {
-    const { roomName, ownerId, meetingTime, userIds, roomType } = req.body;
+    const { roomName, meetingTime, userIds, roomType } = req.body;
     try {
-      const { id } = await act({ role: 'room', cmd: 'roomCreate', roomName, ownerId, meetingTime, userIds, roomType });
+      const { id } = await act({ role: 'room', cmd: 'roomCreate', roomName, ownerId: req.user.id, meetingTime, userIds, roomType });
       res.json({ id });
     } catch (err) {
       res.status(500).json({ error: err.details.message });

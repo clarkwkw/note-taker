@@ -16,8 +16,8 @@ const styles = theme => ({
 class AvatarList extends React.Component{
     renderAvatar(user){
         return (
-            <Avatar key={user.id}>
-                <ImageIcon />
+            <Avatar key={user.id} alt={user.username + "<" + user.email + ">"}>
+                {user.username}
             </Avatar>
         );
     }

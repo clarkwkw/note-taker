@@ -36,6 +36,31 @@ export const get = async (path, payload = {}) => await helper(
     },
     body: JSON.stringify(payload)
   });
+
+   // function for sending PUT request
+   export const put = async (path, payload) => await helper(path, 'PUT', {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.token}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  // function for sending PUT request
+  export const putWithFormData = async (path, payload) => {
+
+    let formData = new FormData();
+    Object.keys(payload).forEach(
+      key => formData.append(key, payload[key])
+    );
+
+    return await helper(path, 'PUT', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.token}`
+      },
+      body: formData
+    })
+  };
   
   // function for sending DELETE request
   export const del = async (path, payload) => await helper(path, 'DELETE', {

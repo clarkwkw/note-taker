@@ -1,4 +1,4 @@
-import { get, post } from './rest';
+import { get, post, put, putWithFormData } from './rest';
 import * as _ from 'lodash';
 
 export async function getRooms(){
@@ -23,3 +23,26 @@ export async function createRoom(roomName, meetingTime, participants, roomType){
     }
     throw(new Error("UnknownError"));
 }
+
+export async function addTextMessage(roomId, messageText){
+    let response = await put("/message/text/id/"+roomId, {content: messageText});
+    if(!_.isNil(response.id)){
+        return response.id;
+    }
+    if(!_.isNil(response.error)){
+        throw(response.error)
+    }
+    throw(new Error("UnknownError"));
+}
+
+export async function addSpeechMessage(roomId, messageFile, language){
+    let response = await putWithFormData("/message/speech/id/"+roomId, {audio: messageFile, language});
+    if(!_.isNil(response.id)){
+        return response.id;
+    }
+    if(!_.isNil(response.error)){
+        throw(response.error)
+    }
+    throw(new Error("UnknownError"));
+}
+

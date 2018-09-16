@@ -1,6 +1,7 @@
 import { validate } from 'validate.js';
 import * as _ from 'lodash';
 import moment from 'moment';
+import path from 'path';
 
 validate.extend(validate.validators.datetime, {
     parse: function(value, options) {
@@ -73,4 +74,31 @@ function validateMeetingTime(meetingTime){
     );
 }
 
-export { validateEmail, validatePassword, validateUsername, validateMeetingTime };
+function validateSpeechFilePath(filePath){
+    const validExts = [".raw", ".m4a"];
+    if(!validExts.includes(path.extname(filePath).toLocaleLowerCase())){
+        return {
+            isValid: false,
+            message: "Unsupported file type"
+        }
+    }
+
+    return {
+        isValid: true
+    }
+}
+
+function validateMessage(filePath){
+    return constructFormattedResult(validate.single(
+        filePath, {
+            presence: true,
+            length: {
+                minimum: 1,
+                tooShort: "Message cannot be empty"
+            }
+
+        })
+    );
+}
+
+export { validateEmail, validatePassword, validateUsername, validateMeetingTime, validateSpeechFilePath, validateMessage };

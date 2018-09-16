@@ -2,8 +2,7 @@ import * as _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Avatar, List, ListItem, ListItemText, Divider, Paper } from '@material-ui/core';
-import ImageIcon from '@material-ui/icons/Image';
+import { Avatar, List, ListItem, ListItemText, Paper } from '@material-ui/core';
 
 const styles = theme => ({
     paper: {

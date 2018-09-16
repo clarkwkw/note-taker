@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles'; 
 
 import { Redirect } from 'react-router';
-import { Avatar, Card, CardContent, CardHeader, CircularProgress, FloatingButton, List, ListItem, ListItemText, Typography} from '@material-ui/core';
+import { Avatar, Card, CardContent, CardHeader, CircularProgress, List, ListItem, ListItemText, Typography} from '@material-ui/core';
+import FloatingButton from '../FloatingButton';
 import AddRoomMessageModal from './AddRoomMessageModal';
 import AvatarList from './AvatarList';
 import { Add as AddIcon, GroupRounded as OfflineIcon, ComputerRounded as OnlineIcon, RecordVoiceOver as RecordIcon, Note as TextIcon } from '@material-ui/icons'
@@ -26,16 +27,13 @@ const styles = theme => ({
     },
     title: {
         fontSize: 20
-    },
-    progress: {
-        margin: theme.spacing.unit * 2,
-      }
+    }
   });
   
 const ChatContent = withStyles(styles)((props) => {
     const{ chat, classes } = props;
 
-    if(chat.messageType == "TEXT"){
+    if(chat.messageType === "TEXT"){
         return (
             <div>
                 <TextIcon />{"   "+chat.content}
@@ -110,7 +108,7 @@ class RoomPage extends React.Component{
                      avatar={
                         <Avatar className={classes.avatar}>
                         {
-                            room.roomType == "ONLINE"?
+                            room.roomType === "ONLINE"?
                             (<OnlineIcon />):
                             (<OfflineIcon />)
                         }

@@ -22,7 +22,6 @@ class SimpleModal extends React.Component {
   };
 
   handleOpen = () => {
-      console.log("opening");
     this.setState({ open: true });
   };
 

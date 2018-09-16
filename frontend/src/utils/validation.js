@@ -35,7 +35,7 @@ function validateEmail(email){
 }
 
 function validatePassword(password, password2){
-    if(password != password2){
+    if(password !== password2){
         return constructFormattedResult("Password mismatch")
     }else{
         return constructFormattedResult(validate.single(

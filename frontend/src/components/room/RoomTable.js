@@ -64,7 +64,7 @@ class RoomTable extends React.Component{
                   </TableCell>
                   <TableCell>{toShortFormattedDateTimeStr(room.meetingTime)}</TableCell>
                   <TableCell>
-                    <RoundedRectangle background={room.roomType=="ONLINE"?"lightgreen":"grey"}>{room.roomType}</RoundedRectangle>
+                    <RoundedRectangle background={room.roomType==="ONLINE"?"lightgreen":"grey"}>{room.roomType}</RoundedRectangle>
                   </TableCell>
                 </TableRow>
               );

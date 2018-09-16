@@ -66,7 +66,7 @@ class RegisterPage extends React.Component{
             await authStateStore.login(this.state.username, this.state.password);
             history.push("/");
         }catch(e){
-            if(e.message == "alreadyExist"){
+            if(e.message === "alreadyExist"){
                 warningRouter.pushWarning("This username has been used.");
             }else{
                 warningRouter.pushWarning("Unknown error: "+e.message);
@@ -80,12 +80,12 @@ class RegisterPage extends React.Component{
 
     onPasswordChanged = (evt) => {
         let password = evt.target.value, password2 = this.state.password2;
-        this.setState({ password, passwordMatched: password == password2 });
+        this.setState({ password, passwordMatched: password === password2 });
     }
 
     onPassword2Changed = (evt) => {
         let password = this.state.password, password2 = evt.target.value;
-        this.setState({ password2, passwordMatched: password == password2 });
+        this.setState({ password2, passwordMatched: password === password2 });
     }
 
     onEmailChanged = (evt) => {

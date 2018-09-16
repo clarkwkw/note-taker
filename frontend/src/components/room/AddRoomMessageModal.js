@@ -34,7 +34,7 @@ class AddRoomMessageModal extends React.Component{
     handleSubmit = evt => {
         evt.preventDefault();
         
-        const messageTransport = this.state.messageType == "TEXT"?
+        const messageTransport = this.state.messageType === "TEXT"?
             () => newTextMessage(this.props.roomId, this.state.messageText):
             () => newSpeechMessage(this.props.roomId, this.state.messageFile);
     
@@ -75,7 +75,7 @@ class AddRoomMessageModal extends React.Component{
     }
 
     renderMessageInput(){
-        if(this.state.messageType == "TEXT"){
+        if(this.state.messageType === "TEXT"){
             return (
                 <TextField value={this.state.messageText} onChange={this.handleMessageTextChanged} multiline fullWidth/>
             );

@@ -1,34 +1,17 @@
 import React from 'react';
-import { getRoom, addTextMessage, addSpeechMessage } from '../../transport/room';
+import * as _ from 'lodash';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles'; 
-import AvatarList from './AvatarList';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FloatingButton from '../FloatingButton';
-import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import Typography from '@material-ui/core/Typography';
-import { toFullFormattedDateTimeStr } from '../../utils/date';
-import AddIcon from '@material-ui/icons/Add';
-import OfflineIcon from '@material-ui/icons/GroupRounded';
-import OnlineIcon from '@material-ui/icons/ComputerRounded';
-import RecordIcon from '@material-ui/icons/RecordVoiceOver';
-import TextIcon from '@material-ui/icons/Note';
+
 import { Redirect } from 'react-router';
+import { Avatar, Card, CardContent, CardHeader, CircularProgress, FloatingButton, List, ListItem, ListItemText, Typography} from '@material-ui/core';
+import AddRoomMessageModal from './AddRoomMessageModal';
+import AvatarList from './AvatarList';
+import { Add as AddIcon, GroupRounded as OfflineIcon, ComputerRounded as OnlineIcon, RecordVoiceOver as RecordIcon, Note as TextIcon } from '@material-ui/icons'
+
+import { toFullFormattedDateTimeStr } from '../../utils/date';
 import warningRouter from '../../utils/warningRouter';
-import * as _ from 'lodash';
-import Modal from '../../Modal';
-import TextField from '@material-ui/core/TextField';
-import { validateMessage } from '../../utils/validation';
+import { getRoom } from '../../transport/room';
 
 const styles = theme => ({
     progress: {
@@ -89,10 +72,9 @@ class RoomPage extends React.Component{
     constructor(props){
         super(props);
         this.fetchRoom();
-
     }
 
-    async fetchRoom(){
+    fetchRoom = async () => {
         let room = await getRoom(this.props.id);
         this.setState({ room: room });
         this.recognizingMessages = [];
@@ -106,64 +88,7 @@ class RoomPage extends React.Component{
             this.recognizingMessagesMonitor = setInterval(() => this.fetchRoom(), 10000);
         }
     }
-
-    newTextMessage = async () => {
-        let validated = validateMessage(this.state.messageText);
-        if(!validated.isValid)throw Error(validated.message);
-        return await addTextMessage(this.props.id, this.state.messageText);
-    }
-
-    newSpeechMessage = async () => {
-        if(_.isNil(this.state.messageFile))throw Error("File not selected");
-        return await addSpeechMessage(this.props.id, this.state.messageFile, "en-US");
-    }
-
-    newMessage = evt => {
-        evt.preventDefault();
-        
-        const messageTransport = this.state.messageType == "TEXT"?this.newTextMessage:this.newSpeechMessage;
-
-        const messageSent = () => {
-            this.setState({
-                messageText: "",
-                messageType: "TEXT",
-                messageFilePath: "",
-                messageFile: null
-            });
-            this.modal.handleClose();
-            warningRouter.pushWarning("Message sent");
-            this.fetchRoom();
-        }
-        const onError = err => {
-            warningRouter.pushWarning(err.message);
-        }
-
-        messageTransport().then(messageSent, onError);        
-    }
     
-    handleMessageFileChanged = evt => {
-        this.setState({messageFilePath: evt.target.value, messageFile: evt.target.files.length > 0?evt.target.files[0]: null});
-        console.log(evt.target.files);
-    }
-    handleMessageTextChanged = evt => {
-        this.setState({messageText: evt.target.value});
-    }
-    handleMessageTypeChanged = evt => {
-        this.setState({messageType: evt.target.value});
-    }
-
-    renderMessageInput(){
-        if(this.state.messageType == "TEXT"){
-            return (
-                <TextField value={this.state.messageText} onChange={this.handleMessageTextChanged} multiline fullWidth/>
-            );
-        }else{
-            return (
-                <input type="file" accept="audio/*" value={this.state.messageFilePath} onChange={this.handleMessageFileChanged}/>
-            );
-        }
-        
-    }
     render(){
         const { classes } = this.props;
         const { room } = this.state;
@@ -244,43 +169,14 @@ class RoomPage extends React.Component{
                     </Card>
                 )
             }
-            <Modal innerRef={ref => {this.modal = ref}}>
-                <Typography variant="headline" gutterBottom style={{marginBottom:20}}>
-                    New Message
-                </Typography>
-                <form onSubmit={this.newMessage}>
-                    <Grid container spacing={24}>
-                            <Grid item xs={4} sm={4}>
-                            <NativeSelect
-                                className={classes.selectEmpty}
-                                value={this.state.messageType}
-                                name="messageType"
-                                onChange={this.handleMessageTypeChanged}
-                            >
-                                <option value={"TEXT"}>Text</option>
-                                <option value={"SPEECH"}>Speech</option>
-                            </NativeSelect>
-                            </Grid>
-                            <Grid item xs={8} sm={8}>
-                                {this.renderMessageInput()}
-                            </Grid>
-                            <Grid item xs={12} sm={12}>
-                                <div align="center">
-                                    <Button type="submit" variant="contained" color="primary" className={classes.button}>
-                                        Send
-                                    </Button>
-                                </div>
-                            </Grid>
-                    </Grid>
-                </form>
-            </Modal>
+
             <FloatingButton onClick={() => this.modal.handleOpen()}>
                 <AddIcon />
             </FloatingButton>
+            <AddRoomMessageModal roomId={room.id} onMessageSent={this.fetchRoom} innerRef={ref => {this.modal = ref}} />
             </div>
         )
     }
-
 
 }
 

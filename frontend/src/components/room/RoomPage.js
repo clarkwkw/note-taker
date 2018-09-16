@@ -43,9 +43,38 @@ const styles = theme => ({
     },
     title: {
         fontSize: 20
-    }
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+      }
   });
   
+const ChatContent = withStyles(styles)((props) => {
+    const{ chat, classes } = props;
+
+    if(chat.messageType == "TEXT"){
+        return (
+            <div>
+                <TextIcon />{"   "+chat.content}
+            </div>
+        )
+    }else{
+        if(!chat.recognizing){
+            return (
+                <div>
+                    <RecordIcon />{"   "+chat.content}
+                </div>
+            )
+        }else{
+            return(
+                <div>
+                    <RecordIcon /><CircularProgress className={classes.progress} />
+                </div>
+            )
+        }
+    }
+})
+
 class RoomPage extends React.Component{
     state = {
         room: null,
@@ -54,16 +83,28 @@ class RoomPage extends React.Component{
         messageFilePath: "",
         messageFile: null
     }
+    modal = null
+    recognizingMessagesMonitor = null
 
     constructor(props){
         super(props);
         this.fetchRoom();
-        this.modal = null;
+
     }
 
     async fetchRoom(){
         let room = await getRoom(this.props.id);
         this.setState({ room: room });
+        this.recognizingMessages = [];
+        if(!_.isNil(this.recognizingMessagesMonitor)){
+            clearInterval(this.recognizingMessagesMonitor);
+        }
+        room.chatRecord.forEach(chat => {
+            if(chat.recognizing)this.recognizingMessages.push(chat.id);
+        })
+        if(this.recognizingMessages.length > 0){
+            this.recognizingMessagesMonitor = setInterval(() => this.fetchRoom(), 10000);
+        }
     }
 
     newTextMessage = async () => {
@@ -191,12 +232,7 @@ class RoomPage extends React.Component{
                                 }}
                             />
                             <CardContent>
-                                {
-                                    chat.messageType == "TEXT"?
-                                    (<TextIcon />):
-                                    (<RecordIcon />)
-                                }
-                                {"   "+chat.content}
+                                <ChatContent chat={chat} className={classes} />
                             </CardContent>
                         </Card>
                 )):

@@ -7,8 +7,10 @@ import { Redirect } from 'react-router';
 import { Avatar, Card, CardContent, CardHeader, CircularProgress, List, ListItem, ListItemText, Typography} from '@material-ui/core';
 import FloatingButton from '../FloatingButton';
 import AddRoomMessageModal from './AddRoomMessageModal';
+import ConferenceModal from './ConferenceModal';
 import AvatarList from './AvatarList';
 import { Add as AddIcon, GroupRounded as OfflineIcon, ComputerRounded as OnlineIcon, RecordVoiceOver as RecordIcon, Note as TextIcon } from '@material-ui/icons'
+import {MessageReplyText as NewMessageIcon, Voice as JoinMeetingIcon} from 'mdi-material-ui';
 
 import { toFullFormattedDateTimeStr } from '../../utils/date';
 import warningRouter from '../../utils/warningRouter';
@@ -169,10 +171,18 @@ class RoomPage extends React.Component{
             }
 
             <FloatingButton onClick={() => this.modal.handleOpen()}>
-                <AddIcon />
+                {
+                    room.roomType === "ONLINE"?
+                    (<JoinMeetingIcon />):
+                    (<NewMessageIcon />)
+                }
             </FloatingButton>
-            <AddRoomMessageModal roomId={room.id} onMessageSent={this.fetchRoom} innerRef={ref => {this.modal = ref}} />
-            </div>
+            {  
+                room.roomType === "ONLINE"?
+                (<ConferenceModal roomId={room.id} innerRef={ref => {this.modal = ref}} />):
+                (<AddRoomMessageModal roomId={room.id} onMessageSent={this.fetchRoom} innerRef={ref => {this.modal = ref}} />)
+            }
+                </div>
         )
     }
 

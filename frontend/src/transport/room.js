@@ -45,4 +45,3 @@ export async function addSpeechMessage(roomId, messageFile, language){
     }
     throw(new Error("UnknownError"));
 }
-
